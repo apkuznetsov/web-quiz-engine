@@ -1,6 +1,7 @@
 package engine;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,5 +16,12 @@ public class QuizController {
     @GetMapping(path = "/api/quiz")
     public Quiz getQuiz() {
         return quiz;
+    }
+
+    @PostMapping(path = "/api/quiz")
+    public QuizFeedback postAnswer(int answer) {
+        final boolean isSuccess = answer == 2;
+
+        return new QuizFeedback(isSuccess, "Feedback!!!");
     }
 }
