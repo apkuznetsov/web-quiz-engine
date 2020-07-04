@@ -1,17 +1,15 @@
-package engine;
+package engine.Quiz;
 
-public class Quiz {
+public class QuizDetails {
 
     final private String title;
     final private String text;
     final private String[] options;
-    final private int answer;
 
-    public Quiz(String title, String text, String[] options, int answer) {
+    public QuizDetails(String title, String text, String[] options) {
         this.title = title;
         this.text = text;
         this.options = options;
-        this.answer = answer;
     }
 
     public String getTitle() {
@@ -24,9 +22,5 @@ public class Quiz {
 
     public String[] getOptions() {
         return options;
-    }
-
-    public int getAnswer() {
-        return answer;
     }
 }

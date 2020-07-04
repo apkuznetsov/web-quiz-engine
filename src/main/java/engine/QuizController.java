@@ -1,5 +1,7 @@
 package engine;
 
+import engine.Quiz.QuizDetails;
+import engine.Quiz.QuizFeedback;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;

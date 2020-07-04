@@ -1,4 +1,4 @@
-package engine;
+package engine.Quiz;
 
 public class QuizFeedback {
 
