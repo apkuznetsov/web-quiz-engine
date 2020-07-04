@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 public class QuizController {
 
-    private int idSequence = 10;
     final private List<QuizEntry> db = new ArrayList<>();
 
     final private String[] options = new String[]{"Robot", "Tea leaf", "Cup of coffee", "Bug"};
@@ -38,9 +37,8 @@ public class QuizController {
 
     @PostMapping(path = "/api/quizzes")
     public QuizEntry addQuiz(@RequestBody Quiz quiz) {
-        QuizEntry newQuizEntry = new QuizEntry(idSequence, quiz);
+        QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
         db.add(newQuizEntry);
-        idSequence++;
 
         return newQuizEntry;
     }
