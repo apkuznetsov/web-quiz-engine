@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuizController {
 
     final private String[] options = new String[]{"Robot", "Tea leaf", "Cup of coffee", "Bug"};
-    final private Quiz quiz = new Quiz(
+    final private QuizDetails quizDetails = new QuizDetails(
             "The Java Logo",
             "What is depicted on the Java logo?",
             options);
 
     @GetMapping(path = "/api/quiz")
-    public Quiz getQuiz() {
-        return quiz;
+    public QuizDetails getQuizDetails() {
+        return quizDetails;
     }
 
     @PostMapping(path = "/api/quiz")
