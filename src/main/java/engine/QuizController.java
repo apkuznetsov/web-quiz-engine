@@ -31,17 +31,23 @@ public class QuizController {
     @GetMapping(path = "/api/quizzes")
     public List<QuizDetails> getQuizzes() {
         List<QuizDetails> quizzes = new ArrayList<>(db.size());
-        for(QuizEntry entry : db) {
+        for (QuizEntry entry : db) {
             quizzes.add(new QuizDetails(entry));
         }
 
         return quizzes;
     }
 
-    @PostMapping(path = "/api/quiz")
-    public QuizFeedback postAnswer(int answer) {
-        final boolean isSuccess = answer == 2;
+    @PostMapping(path = "/api/quizzes/{id}/solve")
+    public QuizFeedback solveQuiz(@RequestBody int answer, @PathVariable int id) {
+        try {
+            QuizEntry quiz = db.get(id);
+            boolean isSuccess = answer == quiz.getAnswer();
 
-        return new QuizFeedback(isSuccess, "Feedback!!!");
+            return new QuizFeedback(isSuccess, "Feedback!!!");
+
+        } catch (IndexOutOfBoundsException exc) {
+            throw new QuizNotFoundException();
+        }
     }
 }
