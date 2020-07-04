@@ -11,6 +11,14 @@ public class QuizController {
 
     final private List<QuizEntry> db = new ArrayList<>();
 
+    @PostMapping(path = "/api/quizzes")
+    public QuizEntry addQuiz(@RequestBody Quiz quiz) {
+        QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
+        db.add(newQuizEntry);
+
+        return newQuizEntry;
+    }
+
     @GetMapping(path = "/api/quizzes/{id}")
     public QuizDetails getQuiz(@PathVariable int id) {
         try {
@@ -20,18 +28,20 @@ public class QuizController {
         }
     }
 
+    @GetMapping(path = "/api/quizzes")
+    public List<QuizDetails> getQuizzes() {
+        List<QuizDetails> quizzes = new ArrayList<>(db.size());
+        for(QuizEntry entry : db) {
+            quizzes.add(new QuizDetails(entry));
+        }
+
+        return quizzes;
+    }
+
     @PostMapping(path = "/api/quiz")
     public QuizFeedback postAnswer(int answer) {
         final boolean isSuccess = answer == 2;
 
         return new QuizFeedback(isSuccess, "Feedback!!!");
-    }
-
-    @PostMapping(path = "/api/quizzes")
-    public QuizEntry addQuiz(@RequestBody Quiz quiz) {
-        QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
-        db.add(newQuizEntry);
-
-        return newQuizEntry;
     }
 }
