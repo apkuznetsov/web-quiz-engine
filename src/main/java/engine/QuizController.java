@@ -46,8 +46,19 @@ public class QuizController {
     @PostMapping(path = "/api/quizzes/{id}/solve")
     public QuizFeedback solveQuiz(QuizAnswer answer, @PathVariable int id) {
         try {
-            QuizEntry quiz = db.get(id);
-            boolean isSuccess = answer.getAnswer() == quiz.getAnswer();
+            final int[] answerAnswer = answer.getAnswer();
+            final int[] quizAnswer = db.get(id).getAnswer();
+
+            boolean isSuccess = false;
+            if (answerAnswer.length == quizAnswer.length) {
+                isSuccess = true;
+                for (int i = 0; i < quizAnswer.length; i++) {
+                    if (answerAnswer[i] != quizAnswer[i]) {
+                        isSuccess = false;
+                        break;
+                    }
+                }
+            }
 
             return new QuizFeedback(isSuccess, "Feedback!!!");
 
