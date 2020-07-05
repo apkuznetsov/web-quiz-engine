@@ -1,6 +1,7 @@
 package engine;
 
 import engine.quiz.*;
+import engine.quiz.exceptions.QuizHasNoTextException;
 import engine.quiz.exceptions.QuizHasNoTitleException;
 import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,10 @@ public class QuizController {
         if (quiz.getTitle() == null
                 || quiz.getTitle().equals("")) {
             throw new QuizHasNoTitleException();
+        }
+        if (quiz.getText() == null
+                || quiz.getText().equals("")) {
+            throw new QuizHasNoTextException();
         }
 
         QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
