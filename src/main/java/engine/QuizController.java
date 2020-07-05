@@ -1,6 +1,6 @@
 package engine;
 
-import engine.Quiz.*;
+import engine.quiz.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

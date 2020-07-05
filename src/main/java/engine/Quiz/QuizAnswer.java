@@ -1,4 +1,4 @@
-package engine.Quiz;
+package engine.quiz;
 
 public class QuizAnswer {
 

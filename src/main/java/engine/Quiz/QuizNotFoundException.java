@@ -1,4 +1,4 @@
-package engine.Quiz;
+package engine.quiz;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
