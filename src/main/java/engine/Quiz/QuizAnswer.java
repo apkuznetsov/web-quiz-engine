@@ -2,20 +2,17 @@ package engine.quiz;
 
 public class QuizAnswer {
 
-    private Integer answer;
+    private int[] answer;
 
-    public QuizAnswer() {
+    public QuizAnswer(int[] answer) {
+        this.answer = answer.clone();
     }
 
-    public QuizAnswer(Integer answer) {
-        this.answer = answer;
+    public int[] getAnswer() {
+        return answer.clone();
     }
 
-    public Integer getAnswer() {
-        return answer;
-    }
-    
-    public void setAnswer(Integer answer) {
-        this.answer = answer;
+    public void setAnswer(int[] answer) {
+        this.answer = answer.clone();
     }
 }
