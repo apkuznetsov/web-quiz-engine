@@ -16,15 +16,7 @@ public class QuizController {
 
     @PostMapping(path = "/api/quizzes")
     public QuizEntry addQuiz(@RequestBody Quiz quiz) {
-        if (quiz.getTitle() == null
-                || quiz.getTitle().equals("")) {
-            throw new QuizHasNoTitleException();
-        }
-        if (quiz.getText() == null
-                || quiz.getText().equals("")) {
-            throw new QuizHasNoTextException();
-        }
-
+        checkQuiz(quiz);
         QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
         db.add(newQuizEntry);
 
@@ -60,6 +52,17 @@ public class QuizController {
 
         } catch (IndexOutOfBoundsException exc) {
             throw new QuizNotFoundException();
+        }
+    }
+
+    private void checkQuiz(Quiz quiz) {
+        if (quiz.getTitle() == null
+                || quiz.getTitle().equals("")) {
+            throw new QuizHasNoTitleException();
+        }
+        if (quiz.getText() == null
+                || quiz.getText().equals("")) {
+            throw new QuizHasNoTextException();
         }
     }
 }
