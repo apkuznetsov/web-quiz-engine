@@ -1,6 +1,7 @@
 package engine;
 
 import engine.quiz.*;
+import engine.quiz.exceptions.QuizHasNoTitleException;
 import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,11 @@ public class QuizController {
 
     @PostMapping(path = "/api/quizzes")
     public QuizEntry addQuiz(@RequestBody Quiz quiz) {
+        if (quiz.getTitle() == null
+                || quiz.getTitle().equals("")) {
+            throw new QuizHasNoTitleException();
+        }
+
         QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
         db.add(newQuizEntry);
 

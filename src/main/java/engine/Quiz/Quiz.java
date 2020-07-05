@@ -2,10 +2,10 @@ package engine.quiz;
 
 public class Quiz {
 
-    final private String title;
     final private String text;
     final private String[] options;
     final private int answer;
+    private String title;
 
     public Quiz(String title, String text, String[] options, int answer) {
         this.title = title;
@@ -16,6 +16,10 @@ public class Quiz {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getText() {
