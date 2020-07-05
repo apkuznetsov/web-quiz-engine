@@ -39,10 +39,10 @@ public class QuizController {
     }
 
     @PostMapping(path = "/api/quizzes/{id}/solve")
-    public QuizFeedback solveQuiz(@RequestBody int answer, @PathVariable int id) {
+    public QuizFeedback solveQuiz(QuizAnswer answer, @PathVariable int id) {
         try {
             QuizEntry quiz = db.get(id);
-            boolean isSuccess = answer == quiz.getAnswer();
+            boolean isSuccess = answer.getAnswer() == quiz.getAnswer();
 
             return new QuizFeedback(isSuccess, "Feedback!!!");
 
