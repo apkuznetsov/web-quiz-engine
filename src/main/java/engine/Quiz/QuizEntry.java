@@ -6,14 +6,15 @@ public class QuizEntry {
     final private String title;
     final private String text;
     final private String[] options;
-    final private int answer;
+    final private int[] answer;
 
-    public QuizEntry(int id, String title, String text, String[] options, int answer) {
+    public QuizEntry(int id, String title, String text,
+                     String[] options, int[] answer) {
         this.id = id;
         this.title = title;
         this.text = text;
-        this.options = options;
-        this.answer = answer;
+        this.options = options.clone();
+        this.answer = answer.clone();
     }
 
     public QuizEntry(int id, Quiz quiz) {
@@ -21,7 +22,7 @@ public class QuizEntry {
         this.title = quiz.getTitle();
         this.text = quiz.getText();
         this.options = quiz.getOptions().clone();
-        this.answer = quiz.getAnswer();
+        this.answer = quiz.getAnswer().clone();
     }
 
     public int getId() {
@@ -37,10 +38,10 @@ public class QuizEntry {
     }
 
     public String[] getOptions() {
-        return options;
+        return options.clone();
     }
 
-    public int getAnswer() {
-        return answer;
+    public int[] getAnswer() {
+        return answer.clone();
     }
 }
