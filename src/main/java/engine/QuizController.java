@@ -1,6 +1,7 @@
 package engine;
 
 import engine.quiz.*;
+import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
