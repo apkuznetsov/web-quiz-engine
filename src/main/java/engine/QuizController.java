@@ -1,9 +1,10 @@
 package engine;
 
 import engine.quiz.*;
+import engine.quiz.exceptions.QuizNotFoundException;
+import engine.quiz.exceptions.QuizOptionsRequiredException;
 import engine.quiz.exceptions.QuizTextRequiredException;
 import engine.quiz.exceptions.QuizTitleRequiredException;
-import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public class QuizController {
         if (quiz.getText() == null
                 || quiz.getText().equals("")) {
             throw new QuizTextRequiredException();
+        }
+        if (quiz.getOptions() == null
+                || quiz.getOptions().length < 2) {
+            throw new QuizOptionsRequiredException();
         }
     }
 }
