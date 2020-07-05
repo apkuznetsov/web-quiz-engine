@@ -5,14 +5,14 @@ public class QuizAnswer {
     private int[] answer;
 
     public QuizAnswer(int[] answer) {
-        this.answer = answer.clone();
+        this.answer = answer;
     }
 
     public int[] getAnswer() {
-        return answer.clone();
+        return answer;
     }
 
     public void setAnswer(int[] answer) {
-        this.answer = answer.clone();
+        this.answer = answer;
     }
 }

@@ -6,13 +6,13 @@ public class Quiz {
     private String text;
     private String[] options;
     private int[] answer;
-    
+
     public Quiz(String title, String text,
                 String[] options, int[] answer) {
         this.title = title;
         this.text = text;
-        this.options = options.clone();
-        this.answer = answer.clone();
+        this.options = options;
+        this.answer = answer;
     }
 
     public String getTitle() {
@@ -32,18 +32,18 @@ public class Quiz {
     }
 
     public String[] getOptions() {
-        return options.clone();
+        return options;
     }
 
     public void setOptions(String[] options) {
-        this.options = options.clone();
+        this.options = options;
     }
 
     public int[] getAnswer() {
-        return answer.clone();
+        return answer;
     }
 
     public void setAnswer(int[] answer) {
-        this.answer = answer.clone();
+        this.answer = answer;
     }
 }
