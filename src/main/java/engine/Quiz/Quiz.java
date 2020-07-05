@@ -4,14 +4,14 @@ public class Quiz {
 
     final private String text;
     final private String[] options;
-    final private int answer;
+    final private int[] answer;
     private String title;
 
-    public Quiz(String title, String text, String[] options, int answer) {
+    public Quiz(String title, String text,
         this.title = title;
         this.text = text;
         this.options = options;
-        this.answer = answer;
+        this.answer = answer.clone();
     }
 
     public String getTitle() {
@@ -30,7 +30,7 @@ public class Quiz {
         return options;
     }
 
-    public int getAnswer() {
-        return answer;
+    public int[] getAnswer() {
+        return answer.clone();
     }
 }
