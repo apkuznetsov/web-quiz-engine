@@ -1,14 +1,14 @@
 package engine.quiz;
 
-public class Quiz {
+public class QuizAdd {
 
     private String title;
     private String text;
     private String[] options;
     private int[] answer;
 
-    public Quiz(String title, String text,
-                String[] options, int[] answer) {
+    public QuizAdd(String title, String text,
+                   String[] options, int[] answer) {
         this.title = title;
         this.text = text;
         this.options = options;

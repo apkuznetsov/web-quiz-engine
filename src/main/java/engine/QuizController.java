@@ -8,7 +8,6 @@ import engine.quiz.exceptions.QuizTitleRequiredException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -17,9 +16,9 @@ public class QuizController {
     final private List<QuizEntry> db = new ArrayList<>();
 
     @PostMapping(path = "/api/quizzes")
-    public QuizEntry addQuiz(@RequestBody Quiz quiz) {
-        checkQuiz(quiz);
-        QuizEntry newQuizEntry = new QuizEntry(db.size(), quiz);
+    public QuizEntry addQuiz(@RequestBody QuizAdd quizAdd) {
+        checkQuiz(quizAdd);
+        QuizEntry newQuizEntry = new QuizEntry(db.size(), quizAdd);
         db.add(newQuizEntry);
 
         return newQuizEntry;
@@ -77,17 +76,17 @@ public class QuizController {
         }
     }
 
-    private void checkQuiz(Quiz quiz) {
-        if (quiz.getTitle() == null
-                || quiz.getTitle().equals("")) {
+    private void checkQuiz(QuizAdd quizAdd) {
+        if (quizAdd.getTitle() == null
+                || quizAdd.getTitle().equals("")) {
             throw new QuizTitleRequiredException();
         }
-        if (quiz.getText() == null
-                || quiz.getText().equals("")) {
+        if (quizAdd.getText() == null
+                || quizAdd.getText().equals("")) {
             throw new QuizTextRequiredException();
         }
-        if (quiz.getOptions() == null
-                || quiz.getOptions().length < 2) {
+        if (quizAdd.getOptions() == null
+                || quizAdd.getOptions().length < 2) {
             throw new QuizOptionsRequiredException();
         }
     }

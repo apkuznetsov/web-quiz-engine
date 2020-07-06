@@ -20,12 +20,12 @@ public class QuizEntry {
         this.answer = answer;
     }
 
-    public QuizEntry(int id, Quiz quiz) {
+    public QuizEntry(int id, QuizAdd quizAdd) {
         this.id = id;
-        this.title = quiz.getTitle();
-        this.text = quiz.getText();
-        this.options = quiz.getOptions();
-        this.answer = quiz.getAnswer();
+        this.title = quizAdd.getTitle();
+        this.text = quizAdd.getText();
+        this.options = quizAdd.getOptions();
+        this.answer = quizAdd.getAnswer();
     }
 
     public int getId() {
