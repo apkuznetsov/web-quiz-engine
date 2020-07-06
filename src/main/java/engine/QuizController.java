@@ -8,6 +8,7 @@ import engine.quiz.exceptions.QuizTitleRequiredException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,7 @@ public class QuizController {
     }
 
     @PostMapping(path = "/api/quizzes/{id}/solve")
-    public QuizFeedback solveQuiz(QuizAnswer answer, @PathVariable int id) {
+    public QuizFeedback solveQuiz(@RequestBody QuizAnswer answer, @PathVariable int id) {
         try {
             final int[] answerAnswer = answer.getAnswer();
             final int[] quizAnswer = db.get(id).getAnswer();
@@ -62,6 +63,8 @@ public class QuizController {
 
             return new QuizFeedback(isSuccess, "Feedback!!!");
 
+        } catch (NullPointerException exc) {
+            return new QuizFeedback(false, "Feedback!!!");
         } catch (IndexOutOfBoundsException exc) {
             throw new QuizNotFoundException();
         }

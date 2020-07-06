@@ -4,6 +4,9 @@ public class QuizAnswer {
 
     private int[] answer;
 
+    public QuizAnswer() {
+    }
+
     public QuizAnswer(int[] answer) {
         this.answer = answer;
     }
