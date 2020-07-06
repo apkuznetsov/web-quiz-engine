@@ -1,14 +1,18 @@
-package engine.Quiz;
+package engine.quiz;
 
 public class QuizEntry {
 
-    final private int id;
-    final private String title;
-    final private String text;
-    final private String[] options;
-    final private int answer;
+    private int id;
+    private String title;
+    private String text;
+    private String[] options;
+    private int[] answer;
 
-    public QuizEntry(int id, String title, String text, String[] options, int answer) {
+    public QuizEntry() {
+    }
+
+    public QuizEntry(int id, String title, String text,
+                     String[] options, int[] answer) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -20,7 +24,7 @@ public class QuizEntry {
         this.id = id;
         this.title = quiz.getTitle();
         this.text = quiz.getText();
-        this.options = quiz.getOptions().clone();
+        this.options = quiz.getOptions();
         this.answer = quiz.getAnswer();
     }
 
@@ -28,19 +32,39 @@ public class QuizEntry {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getText() {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public String[] getOptions() {
         return options;
     }
 
-    public int getAnswer() {
+    public void setOptions(String[] options) {
+        this.options = options;
+    }
+
+    public int[] getAnswer() {
         return answer;
+    }
+
+    public void setAnswer(int[] answer) {
+        this.answer = answer;
     }
 }

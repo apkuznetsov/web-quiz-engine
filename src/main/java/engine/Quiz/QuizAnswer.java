@@ -1,21 +1,21 @@
-package engine.Quiz;
+package engine.quiz;
 
 public class QuizAnswer {
 
-    private Integer answer;
+    private int[] answer;
 
     public QuizAnswer() {
     }
 
-    public QuizAnswer(Integer answer) {
+    public QuizAnswer(int[] answer) {
         this.answer = answer;
     }
 
-    public Integer getAnswer() {
+    public int[] getAnswer() {
         return answer;
     }
-    
-    public void setAnswer(Integer answer) {
+
+    public void setAnswer(int[] answer) {
         this.answer = answer;
     }
 }
