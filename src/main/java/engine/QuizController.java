@@ -47,8 +47,17 @@ public class QuizController {
     @PostMapping(path = "/api/quizzes/{id}/solve")
     public QuizFeedback solveQuiz(@RequestBody QuizAnswer answer, @PathVariable int id) {
         try {
-            final int[] answerAnswer = answer.getAnswer();
-            final int[] quizAnswer = db.get(id).getAnswer();
+            int[] answerAnswer;
+            if (answer == null || answer.getAnswer() == null) {
+                answerAnswer = new int[0];
+            } else {
+                answerAnswer = answer.getAnswer();
+            }
+
+            int[] quizAnswer = db.get(id).getAnswer();
+            if (quizAnswer == null) {
+                quizAnswer = new int[0];
+            }
 
             boolean isSuccess = false;
             if (answerAnswer.length == quizAnswer.length) {
@@ -63,8 +72,6 @@ public class QuizController {
 
             return new QuizFeedback(isSuccess, "Feedback!!!");
 
-        } catch (NullPointerException exc) {
-            return new QuizFeedback(false, "Feedback!!!");
         } catch (IndexOutOfBoundsException exc) {
             throw new QuizNotFoundException();
         }
