@@ -13,15 +13,15 @@ import java.util.List;
 @RestController
 public class QuizController {
 
-    final private List<QuizEntry> db = new ArrayList<>();
+    final private List<Quiz> db = new ArrayList<>();
 
     @PostMapping(path = "/api/quizzes")
-    public QuizEntry addQuiz(@RequestBody QuizAdd quizAdd) {
+    public Quiz addQuiz(@RequestBody QuizAdd quizAdd) {
         checkQuiz(quizAdd);
-        QuizEntry newQuizEntry = new QuizEntry(db.size(), quizAdd);
-        db.add(newQuizEntry);
+        Quiz newQuiz = new Quiz(db.size(), quizAdd);
+        db.add(newQuiz);
 
-        return newQuizEntry;
+        return newQuiz;
     }
 
     @GetMapping(path = "/api/quizzes/{id}")
@@ -36,7 +36,7 @@ public class QuizController {
     @GetMapping(path = "/api/quizzes")
     public List<QuizDetails> getQuizzes() {
         List<QuizDetails> quizzes = new ArrayList<>(db.size());
-        for (QuizEntry entry : db) {
+        for (Quiz entry : db) {
             quizzes.add(new QuizDetails(entry));
         }
 

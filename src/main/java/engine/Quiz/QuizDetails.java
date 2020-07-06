@@ -14,7 +14,7 @@ public class QuizDetails {
         this.options = options;
     }
 
-    public QuizDetails(QuizEntry quiz) {
+    public QuizDetails(Quiz quiz) {
         this.id = quiz.getId();
         this.title = quiz.getTitle();
         this.text = quiz.getText();

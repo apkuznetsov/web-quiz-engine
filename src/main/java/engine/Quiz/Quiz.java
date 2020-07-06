@@ -1,6 +1,6 @@
 package engine.quiz;
 
-public class QuizEntry {
+public class Quiz {
 
     private int id;
     private String title;
@@ -8,11 +8,11 @@ public class QuizEntry {
     private String[] options;
     private int[] answer;
 
-    public QuizEntry() {
+    public Quiz() {
     }
 
-    public QuizEntry(int id, String title, String text,
-                     String[] options, int[] answer) {
+    public Quiz(int id, String title, String text,
+                String[] options, int[] answer) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -20,7 +20,7 @@ public class QuizEntry {
         this.answer = answer;
     }
 
-    public QuizEntry(int id, QuizAdd quizAdd) {
+    public Quiz(int id, QuizAdd quizAdd) {
         this.id = id;
         this.title = quizAdd.getTitle();
         this.text = quizAdd.getText();
