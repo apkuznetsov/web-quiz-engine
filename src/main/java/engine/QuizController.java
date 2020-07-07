@@ -28,12 +28,11 @@ public class QuizController {
     }
 
     @GetMapping(path = "/api/quizzes/{id}")
-    public QuizDetails getQuiz(@PathVariable int id) {
-        try {
-            return new QuizDetails(db.get(id));
-        } catch (IndexOutOfBoundsException exc) {
-            throw new QuizNotFoundException();
-        }
+    public ResponseEntity<Quiz> getQuiz(@PathVariable Long id) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        return quiz == null
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
     @GetMapping(path = "/api/quizzes")
@@ -76,21 +75,6 @@ public class QuizController {
 
         } catch (IndexOutOfBoundsException exc) {
             throw new QuizNotFoundException();
-        }
-    }
-
-    private void checkQuiz(QuizAdd quizAdd) {
-        if (quizAdd.getTitle() == null
-                || quizAdd.getTitle().equals("")) {
-            throw new QuizTitleRequiredException();
-        }
-        if (quizAdd.getText() == null
-                || quizAdd.getText().equals("")) {
-            throw new QuizTextRequiredException();
-        }
-        if (quizAdd.getOptions() == null
-                || quizAdd.getOptions().length < 2) {
-            throw new QuizOptionsRequiredException();
         }
     }
 }
