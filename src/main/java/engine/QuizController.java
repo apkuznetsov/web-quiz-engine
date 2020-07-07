@@ -1,10 +1,8 @@
 package engine;
 
+import engine.db.Answer;
 import engine.db.Quiz;
 import engine.db.QuizRepository;
-import engine.quiz.QuizAnswer;
-import engine.quiz.QuizFeedback;
-import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,35 +38,10 @@ public class QuizController {
     }
 
     @PostMapping(path = "/api/quizzes/{id}/solve")
-    public QuizFeedback solveQuiz(@RequestBody QuizAnswer answer, @PathVariable int id) {
-        try {
-            int[] answerAnswer;
-            if (answer == null || answer.getAnswer() == null) {
-                answerAnswer = new int[0];
-            } else {
-                answerAnswer = answer.getAnswer();
-            }
-
-            int[] quizAnswer = db.get(id).getAnswer();
-            if (quizAnswer == null) {
-                quizAnswer = new int[0];
-            }
-
-            boolean isSuccess = false;
-            if (answerAnswer.length == quizAnswer.length) {
-                isSuccess = true;
-                for (int i = 0; i < quizAnswer.length; i++) {
-                    if (answerAnswer[i] != quizAnswer[i]) {
-                        isSuccess = false;
-                        break;
-                    }
-                }
-            }
-
-            return new QuizFeedback(isSuccess, "Feedback!!!");
-
-        } catch (IndexOutOfBoundsException exc) {
-            throw new QuizNotFoundException();
-        }
+    public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        return quiz != null
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
     }
 }
