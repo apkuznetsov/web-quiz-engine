@@ -1,8 +1,6 @@
 package engine;
 
-import engine.db.Answer;
-import engine.db.Quiz;
-import engine.db.QuizRepository;
+import engine.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,21 @@ import java.util.List;
 public class QuizController {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private QuizRepository quizRepository;
+    
+    @PostMapping(value = "/api/register", consumes = "application/json")
+    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
+        User foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser == null) {
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping(value = "/api/quizzes", consumes = "application/json")
     public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
