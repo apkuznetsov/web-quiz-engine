@@ -22,14 +22,6 @@ public class Quiz {
         this.answer = answer;
     }
 
-    public Quiz(int id, QuizAdd quizAdd) {
-        this.id = id;
-        this.title = quizAdd.getTitle();
-        this.text = quizAdd.getText();
-        this.options = quizAdd.getOptions();
-        this.answer = quizAdd.getAnswer();
-    }
-
     public int getId() {
         return id;
     }

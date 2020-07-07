@@ -22,7 +22,9 @@ public class QuizController {
     @PostMapping(path = "/api/quizzes")
     public Quiz addQuiz(@RequestBody QuizAdd quizAdd) {
         checkQuiz(quizAdd);
-        Quiz newQuiz = new Quiz(db.size(), quizAdd);
+        Quiz newQuiz = new Quiz(db.size(),
+                quizAdd.getTitle(), quizAdd.getText(),
+                quizAdd.getOptions(), quizAdd.getAnswer());
         db.add(newQuiz);
 
         return newQuiz;
