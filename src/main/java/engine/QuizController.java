@@ -3,7 +3,6 @@ package engine;
 import engine.db.Quiz;
 import engine.db.QuizRepository;
 import engine.quiz.QuizAnswer;
-import engine.quiz.QuizDetails;
 import engine.quiz.QuizFeedback;
 import engine.quiz.exceptions.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +35,8 @@ public class QuizController {
     }
 
     @GetMapping(path = "/api/quizzes")
-    public List<QuizDetails> getQuizzes() {
-        List<QuizDetails> quizzes = new ArrayList<>(db.size());
-        for (Quiz entry : db) {
-            quizzes.add(new QuizDetails(entry));
-        }
-
-        return quizzes;
+    public ResponseEntity<List<Quiz>> getQuizzes() {
+        return new ResponseEntity<>(new ArrayList<>(quizRepository.findAll()), HttpStatus.OK);
     }
 
     @PostMapping(path = "/api/quizzes/{id}/solve")
