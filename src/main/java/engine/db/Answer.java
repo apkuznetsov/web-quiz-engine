@@ -1,20 +1,18 @@
 package engine.db;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import java.util.Set;
 
 public class Answer {
-    @Id
-    @Column(name = "AnswerId")
-    private long id;
+    private Set<Integer> answer;
 
-    private int answer;
+    public Answer() {
+    }
 
-    public int getAnswer() {
+    public Set<Integer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(Set<Integer> answer) {
         this.answer = answer;
     }
 }
