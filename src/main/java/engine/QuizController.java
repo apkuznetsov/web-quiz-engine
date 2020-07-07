@@ -1,33 +1,30 @@
 package engine;
 
 import engine.db.Quiz;
-import engine.quiz.QuizAdd;
+import engine.db.QuizRepository;
 import engine.quiz.QuizAnswer;
 import engine.quiz.QuizDetails;
 import engine.quiz.QuizFeedback;
 import engine.quiz.exceptions.QuizNotFoundException;
-import engine.quiz.exceptions.QuizOptionsRequiredException;
-import engine.quiz.exceptions.QuizTextRequiredException;
-import engine.quiz.exceptions.QuizTitleRequiredException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class QuizController {
 
-    final private List<Quiz> db = new ArrayList<>();
+    @Autowired
+    private QuizRepository quizRepository;
 
-    @PostMapping(path = "/api/quizzes")
-    public Quiz addQuiz(@RequestBody QuizAdd quizAdd) {
-        checkQuiz(quizAdd);
-        Quiz newQuiz = new Quiz(db.size(),
-                quizAdd.getTitle(), quizAdd.getText(),
-                quizAdd.getOptions(), quizAdd.getAnswer());
-        db.add(newQuiz);
-
-        return newQuiz;
+    @PostMapping(value = "/api/quizzes", consumes = "application/json")
+    public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
+        quizRepository.save(quiz);
+        return new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
     @GetMapping(path = "/api/quizzes/{id}")
