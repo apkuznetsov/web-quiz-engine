@@ -1,4 +1,6 @@
-package engine.quiz;
+package engine.db;
+
+import engine.quiz.QuizAdd;
 
 public class Quiz {
 

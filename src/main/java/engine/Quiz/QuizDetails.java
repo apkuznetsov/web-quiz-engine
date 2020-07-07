@@ -1,5 +1,7 @@
 package engine.quiz;
 
+import engine.db.Quiz;
+
 public class QuizDetails {
 
     final private int id;
