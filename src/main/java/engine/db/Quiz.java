@@ -1,25 +1,35 @@
 package engine.db;
 
-import engine.quiz.QuizAdd;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Quiz {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     private String title;
     private String text;
-    private String[] options;
-    private int[] answer;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "QuizId", nullable = false)
+    private List<Option> options = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "QuizId", nullable = false)
+    private List<Answer> answers = new ArrayList<>();
 
     public Quiz() {
     }
 
     public Quiz(int id, String title, String text,
-                String[] options, int[] answer) {
+                int[] answer) {
         this.id = id;
         this.title = title;
         this.text = text;
-        this.options = options;
-        this.answer = answer;
     }
 
     public int getId() {
@@ -44,21 +54,5 @@ public class Quiz {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String[] getOptions() {
-        return options;
-    }
-
-    public void setOptions(String[] options) {
-        this.options = options;
-    }
-
-    public int[] getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(int[] answer) {
-        this.answer = answer;
     }
 }
