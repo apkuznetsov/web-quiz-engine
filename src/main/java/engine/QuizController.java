@@ -40,7 +40,7 @@ public class QuizController {
     @PostMapping(path = "/api/quizzes/{id}/solve")
     public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
         Quiz quiz = quizRepository.findById(id).orElse(null);
-        return quiz != null
+        return quiz == null
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
     }
