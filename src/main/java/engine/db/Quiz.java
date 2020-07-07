@@ -1,42 +1,42 @@
 package engine.db;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
+    @NotNull
     private String title;
+
+    @NotNull
     private String text;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "QuizId", nullable = false)
-    private List<Option> options = new ArrayList<>();
+    @NotNull
+    @Size(min = 2)
+    private String[] options;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "QuizId", nullable = false)
-    private List<Answer> answers = new ArrayList<>();
+    @ElementCollection
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<Integer> answer = new HashSet<>();
 
     public Quiz() {
     }
 
-    public Quiz(int id, String title, String text,
-                int[] answer) {
-        this.id = id;
-        this.title = title;
-        this.text = text;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,5 +54,21 @@ public class Quiz {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String[] getOptions() {
+        return options;
+    }
+
+    public void setOptions(String[] options) {
+        this.options = options;
+    }
+
+    public Set<Integer> getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(Set<Integer> answer) {
+        this.answer = answer;
     }
 }
