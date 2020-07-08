@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,21 +26,33 @@ public class QuizController {
     private UserRepository userRepository;
 
     @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private QuizRepository quizRepository;
-    
+
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
-        User foundUser = userRepository.findByEmail(user.getEmail());
+    public ResponseEntity<User> registerUser(@Valid @RequestBody User newUser) {
+        User foundUser = userRepository.findByEmail(newUser.getEmail());
         if (foundUser == null) {
-            userRepository.save(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            newUser.setPassword(
+                    bCryptPasswordEncoder.encode(newUser.getPassword())
+            );
+            userRepository.save(newUser);
+            return new ResponseEntity<>(newUser, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(newUser, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/quizzes", consumes = "application/json")
     public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currUser = userRepository.findByEmail(
+                ((UserDetails) principal).getUsername()
+        );
+        quiz.setUser(currUser);
+
         quizRepository.save(quiz);
         return new ResponseEntity<>(quiz, HttpStatus.OK);
     }
@@ -73,7 +86,7 @@ public class QuizController {
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-}
+            }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -88,3 +101,4 @@ public class QuizController {
                         ).getId()
                 );
     }
+}
