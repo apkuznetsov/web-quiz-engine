@@ -11,20 +11,19 @@ import java.util.Set;
 @Entity
 public class Quiz {
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne
+    public User user;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @NotNull
     private String title;
-
     @NotNull
     private String text;
-
     @NotNull
     @Size(min = 2)
     private String[] options;
-
     @ElementCollection
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Integer> answer = new HashSet<>();
@@ -70,5 +69,13 @@ public class Quiz {
 
     public void setAnswer(Set<Integer> answer) {
         this.answer = answer;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
