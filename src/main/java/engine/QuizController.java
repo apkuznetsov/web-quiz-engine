@@ -66,22 +66,25 @@ public class QuizController {
     }
 
     @DeleteMapping("/quizzes/{id}")
-    public void deleteQuiz (@PathVariable Long id) {
+    public void deleteQuiz(@PathVariable Long id) {
         if (quizRepository.existsById(id)) {
-            if (quizRepository.findById(id).get().getUser().getId()
-                    .equals(
-                            userRepository.findByEmail(
-                                    ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()
-                            ).getId()
-                    )) {
-
-                quizRepository.deleteById(id);;
+            if (canCurrUserDeleteQuiz(id)) {
+                quizRepository.deleteById(id);
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-
             } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    private boolean canCurrUserDeleteQuiz(Long quizId) {
+        return quizRepository.findById(quizId).get().getUser().getId()
+                .equals(
+                        userRepository.findByEmail(
+                                ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                                        .getUsername()
+                        ).getId()
+                );
     }
