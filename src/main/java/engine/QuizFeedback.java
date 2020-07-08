@@ -1,7 +1,7 @@
 package engine;
 
-import engine.db.Answer;
-import engine.db.Quiz;
+import engine.db.quiz.Answer;
+import engine.db.quiz.Quiz;
 
 public class QuizFeedback {
 
