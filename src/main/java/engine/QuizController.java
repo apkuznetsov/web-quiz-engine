@@ -8,7 +8,10 @@ import engine.db.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -61,4 +64,24 @@ public class QuizController {
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
     }
+
+    @DeleteMapping("/quizzes/{id}")
+    public void deleteQuiz (@PathVariable Long id) {
+        if (quizRepository.existsById(id)) {
+            if (quizRepository.findById(id).get().getUser().getId()
+                    .equals(
+                            userRepository.findByEmail(
+                                    ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()
+                            ).getId()
+                    )) {
+
+                quizRepository.deleteById(id);;
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+
+            } else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 }
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
