@@ -1,4 +1,4 @@
-package engine.db;
+package engine.db.quiz;
 
 import java.util.Set;
 
