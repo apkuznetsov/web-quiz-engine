@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -81,11 +82,12 @@ public class QuizController {
                 : new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
-    @DeleteMapping("/quizzes/{id}")
-    public void deleteQuiz(@PathVariable Long id) {
-        if (quizRepository.existsById(id)) {
-            if (canCurrUserDeleteQuiz(id)) {
-                quizRepository.deleteById(id);
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable long id, @AuthenticationPrincipal User user) {
+        Optional<Quiz> quiz = quizRepository.findById(id);
+        if (quiz.isPresent()) {
+            if (quiz.get().getUser().equals(user)) {
+                quizRepository.delete(quiz.get());
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -101,15 +103,5 @@ public class QuizController {
         return quiz == null
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(new Feedback(quiz, answer), HttpStatus.OK);
-    }
-
-    private boolean canCurrUserDeleteQuiz(Long quizId) {
-        return quizRepository.findById(quizId).get().getUser().getId()
-                .equals(
-                        userRepository.findByEmail(
-                                ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                                        .getUsername()
-                        ).getId()
-                );
     }
 }
