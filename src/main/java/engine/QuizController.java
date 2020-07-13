@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -97,11 +99,27 @@ public class QuizController {
         }
     }
 
-    @PostMapping(path = "/quizzes/{id}/solve")
-    public ResponseEntity<Feedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
-        Quiz quiz = quizRepository.findById(id).orElse(null);
-        return quiz == null
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(new Feedback(quiz, answer), HttpStatus.OK);
+    @PostMapping(path = "{id}/solve")
+    public ResponseEntity<Feedback> solveQuiz(@PathVariable long id, @RequestBody Answer answer, @AuthenticationPrincipal User user) {
+        Optional<Quiz> quizzes = quizRepository.findById(id);
+        if (quizzes.isEmpty()) {
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Quiz quiz = quizzes.get();
+        Feedback feedback = new Feedback(quiz, answer);
+
+        if (feedback.isSuccess()) {
+            QuizCompleted quizCompleted = new QuizCompleted();
+            quizCompleted.setCompletedAt(LocalDateTime.now());
+            quizCompleted.setQuiz(quiz);
+            quizCompleted.setUser(user);
+            quizCompleted = quizCompletedRepository.save(quizCompleted);
+
+            quiz.getQuizCompleteds().add(quizCompleted);
+            quizRepository.save(quiz);
+        }
+
+        return new ResponseEntity<>(feedback, HttpStatus.OK);
     }
 }
