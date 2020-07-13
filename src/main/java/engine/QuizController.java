@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -49,6 +47,12 @@ public class QuizController {
         }
     }
 
+    @GetMapping(path = "/quizzes")
+    public ResponseEntity<Page<Quiz>> getQuizzes(@RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return new ResponseEntity<>(quizRepository.findAll(pageable), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/quizzes", consumes = "application/json")
     public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -69,20 +73,6 @@ public class QuizController {
                 : new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/quizzes")
-    public ResponseEntity<Page<Quiz>> getQuizzes(@RequestParam int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return new ResponseEntity<>(quizRepository.findAll(pageable), HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/quizzes/{id}/solve")
-    public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
-        Quiz quiz = quizRepository.findById(id).orElse(null);
-        return quiz == null
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
-    }
-
     @DeleteMapping("/quizzes/{id}")
     public void deleteQuiz(@PathVariable Long id) {
         if (quizRepository.existsById(id)) {
@@ -97,6 +87,14 @@ public class QuizController {
         }
     }
 
+    @PostMapping(path = "/quizzes/{id}/solve")
+    public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        return quiz == null
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
+    }
+    
     private boolean canCurrUserDeleteQuiz(Long quizId) {
         return quizRepository.findById(quizId).get().getUser().getId()
                 .equals(
