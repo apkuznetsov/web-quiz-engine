@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -66,6 +67,12 @@ public class QuizController {
         return new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
+    @GetMapping("/quizzes/completed")
+    public Page<QuizCompleted> getCompletedQuizzes(@RequestParam int page, @AuthenticationPrincipal User user) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return quizCompletedRepository.findCompletedQuizzesPaginated(user.getId(), pageable);
+    }
+
     @GetMapping(path = "/quizzes/{id}")
     public ResponseEntity<Quiz> getQuiz(@PathVariable Long id) {
         Quiz quiz = quizRepository.findById(id).orElse(null);
@@ -95,7 +102,7 @@ public class QuizController {
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(new Feedback(quiz, answer), HttpStatus.OK);
     }
-    
+
     private boolean canCurrUserDeleteQuiz(Long quizId) {
         return quizRepository.findById(quizId).get().getUser().getId()
                 .equals(
