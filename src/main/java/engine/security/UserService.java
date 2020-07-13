@@ -1,4 +1,4 @@
-package engine.db.user;
+package engine.security;
 
 import engine.models.User;
 import engine.repositories.UserRepository;
