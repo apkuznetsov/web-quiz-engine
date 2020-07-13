@@ -1,9 +1,7 @@
 package engine;
 
-import engine.models.Answer;
-import engine.models.Quiz;
-import engine.models.Feedback;
-import engine.models.User;
+import engine.models.*;
+import engine.repositories.QuizCompletedRepository;
 import engine.repositories.QuizRepository;
 import engine.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,9 @@ public class QuizController {
 
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private QuizCompletedRepository quizCompletedRepository;
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User newUser) {
