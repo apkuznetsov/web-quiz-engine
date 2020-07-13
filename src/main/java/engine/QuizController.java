@@ -1,10 +1,11 @@
 package engine;
 
-import engine.db.quiz.Answer;
-import engine.db.quiz.Quiz;
 import engine.db.quiz.QuizRepository;
-import engine.db.user.User;
 import engine.db.user.UserRepository;
+import engine.models.Answer;
+import engine.models.Quiz;
+import engine.models.QuizFeedback;
+import engine.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

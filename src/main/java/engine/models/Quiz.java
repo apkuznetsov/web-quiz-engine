@@ -1,7 +1,6 @@
-package engine.db.quiz;
+package engine.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import engine.db.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

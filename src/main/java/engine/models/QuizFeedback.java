@@ -1,7 +1,4 @@
-package engine;
-
-import engine.db.quiz.Answer;
-import engine.db.quiz.Quiz;
+package engine.models;
 
 public class QuizFeedback {
 
