@@ -2,7 +2,7 @@ package engine;
 
 import engine.models.Answer;
 import engine.models.Quiz;
-import engine.models.QuizFeedback;
+import engine.models.Feedback;
 import engine.models.User;
 import engine.repositories.QuizRepository;
 import engine.repositories.UserRepository;
@@ -88,11 +88,11 @@ public class QuizController {
     }
 
     @PostMapping(path = "/quizzes/{id}/solve")
-    public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
+    public ResponseEntity<Feedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
         Quiz quiz = quizRepository.findById(id).orElse(null);
         return quiz == null
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
+                : new ResponseEntity<>(new Feedback(quiz, answer), HttpStatus.OK);
     }
     
     private boolean canCurrUserDeleteQuiz(Long quizId) {
