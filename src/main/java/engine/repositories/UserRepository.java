@@ -1,4 +1,4 @@
-package engine.db.user;
+package engine.repositories;
 
 import engine.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

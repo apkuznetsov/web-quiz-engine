@@ -1,4 +1,4 @@
-package engine.db.quiz;
+package engine.repositories;
 
 import engine.models.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;

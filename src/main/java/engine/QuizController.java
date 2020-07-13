@@ -1,7 +1,7 @@
 package engine;
 
-import engine.db.quiz.QuizRepository;
-import engine.db.user.UserRepository;
+import engine.repositories.QuizRepository;
+import engine.repositories.UserRepository;
 import engine.models.Answer;
 import engine.models.Quiz;
 import engine.models.QuizFeedback;
