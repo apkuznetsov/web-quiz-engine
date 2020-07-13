@@ -7,6 +7,9 @@ import engine.models.User;
 import engine.repositories.QuizRepository;
 import engine.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,8 +70,9 @@ public class QuizController {
     }
 
     @GetMapping(path = "/quizzes")
-    public ResponseEntity<List<Quiz>> getQuizzes() {
-        return new ResponseEntity<>(new ArrayList<>(quizRepository.findAll()), HttpStatus.OK);
+    public ResponseEntity<Page<Quiz>> getQuizzes(@RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return new ResponseEntity<>(quizRepository.findAll(pageable), HttpStatus.OK);
     }
 
     @PostMapping(path = "/quizzes/{id}/solve")
