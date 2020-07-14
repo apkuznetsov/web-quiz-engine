@@ -12,7 +12,7 @@ public class QuizCompleted {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
-    private int id;
+    private long id;
 
     @JsonIgnore
     @ManyToOne
@@ -25,11 +25,11 @@ public class QuizCompleted {
     @ManyToOne(cascade = CascadeType.DETACH)
     private User user;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
