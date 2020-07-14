@@ -78,10 +78,10 @@ public class QuizController {
 
     @DeleteMapping("/quizzes/{id}")
     public void delete(@PathVariable long id, @AuthenticationPrincipal User user) {
-        Optional<Quiz> quiz = quizRepository.findById(id);
-        if (quiz.isPresent()) {
-            if (quiz.get().getUser().equals(user)) {
-                quizRepository.delete(quiz.get());
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        if (quiz != null) {
+            if (quiz.getUser().getEmail().equals(user.getEmail())) {
+                quizRepository.deleteById(id);
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
