@@ -93,14 +93,12 @@ public class QuizController {
 
     @PostMapping(path = "/quizzes/{id}/solve")
     public ResponseEntity<Feedback> solveQuiz(@PathVariable long id, @RequestBody Answer answer, @AuthenticationPrincipal User user) {
-        Optional<Quiz> quizzes = quizRepository.findById(id);
-        if (quizzes.isEmpty()) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        if (quiz == null) {
             new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Quiz quiz = quizzes.get();
         Feedback feedback = new Feedback(quiz, answer);
-
         if (feedback.isSuccess()) {
             QuizCompleted quizCompleted = new QuizCompleted();
             quizCompleted.setCompletedAt(LocalDateTime.now());
