@@ -76,7 +76,7 @@ If the number of options in the quiz is less than 2, the response is `404` as we
 To get an info about a quiz, you need to specify its `id` in url.
 
 ```
-GET http://localhost:8888/api/quizzes/1
+GET http://localhost:8889/api/quizzes/1
 ```
 
 The response does not contain `answer`:
@@ -94,7 +94,7 @@ The number of stored quizzes can be very large.
 In this regard, obtaining all quizzes is performed page by page: 10 quizzes at once.
 
 ```
-GET http://localhost:8888/api/quizzes
+GET http://localhost:8889/api/quizzes
 ```
 
 The response contains a JSON with quizzes (inside `content`) and some additional metadata:
@@ -147,7 +147,7 @@ The API provides an operation to get all completions of quizzes for a user.
 A response is separated by pages, since the service may return a lot of data.
 
 ```
-GET  http://localhost:8888/api/quizzes/completed
+GET  http://localhost:8889/api/quizzes/completed
 ```
 
 The response contains a JSON with quizzes (inside `content`) and some additional metadata:
@@ -176,7 +176,7 @@ We removed some metadata keys from the response to keep it more simple to unders
 It is possible to delete a quiz, but this can only be done by its creator.
 
 ```
-DELETE  http://localhost:8888/api/quizzes/1
+DELETE  http://localhost:8889/api/quizzes/1
 ```
 
 If the operation was successful, the service returns `HTTP 204 (No content)`.
