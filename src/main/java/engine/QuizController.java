@@ -11,15 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -59,13 +56,8 @@ public class QuizController {
     }
 
     @PostMapping(value = "/quizzes", consumes = "application/json")
-    public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currUser = userRepository.findByEmail(
-                ((UserDetails) principal).getUsername()
-        );
-        quiz.setUser(currUser);
-
+    public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz, @AuthenticationPrincipal User user) {
+        quiz.setUser(user);
         quizRepository.save(quiz);
         return new ResponseEntity<>(quiz, HttpStatus.OK);
     }
