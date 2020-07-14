@@ -76,7 +76,7 @@ public class QuizController {
                 : new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/quizzes/{id}")
     public void delete(@PathVariable long id, @AuthenticationPrincipal User user) {
         Optional<Quiz> quiz = quizRepository.findById(id);
         if (quiz.isPresent()) {
@@ -91,7 +91,7 @@ public class QuizController {
         }
     }
 
-    @PostMapping(path = "{id}/solve")
+    @PostMapping(path = "/quizzes/{id}/solve")
     public ResponseEntity<Feedback> solveQuiz(@PathVariable long id, @RequestBody Answer answer, @AuthenticationPrincipal User user) {
         Optional<Quiz> quizzes = quizRepository.findById(id);
         if (quizzes.isEmpty()) {
