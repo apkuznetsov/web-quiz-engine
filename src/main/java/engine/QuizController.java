@@ -1,22 +1,23 @@
 package engine;
 
-import engine.db.quiz.Answer;
-import engine.db.quiz.Quiz;
-import engine.db.quiz.QuizRepository;
-import engine.db.user.User;
-import engine.db.user.UserRepository;
+import engine.models.*;
+import engine.repositories.QuizCompletedRepository;
+import engine.repositories.QuizRepository;
+import engine.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -30,6 +31,9 @@ public class QuizController {
 
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private QuizCompletedRepository quizCompletedRepository;
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User newUser) {
@@ -45,16 +49,23 @@ public class QuizController {
         }
     }
 
-    @PostMapping(value = "/quizzes", consumes = "application/json")
-    public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currUser = userRepository.findByEmail(
-                ((UserDetails) principal).getUsername()
-        );
-        quiz.setUser(currUser);
+    @GetMapping(path = "/quizzes")
+    public ResponseEntity<Page<Quiz>> getQuizzes(@RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return new ResponseEntity<>(quizRepository.findAll(pageable), HttpStatus.OK);
+    }
 
+    @PostMapping(value = "/quizzes", consumes = "application/json")
+    public ResponseEntity<Quiz> addQuiz(@Valid @RequestBody Quiz quiz, @AuthenticationPrincipal User user) {
+        quiz.setUser(user);
         quizRepository.save(quiz);
         return new ResponseEntity<>(quiz, HttpStatus.OK);
+    }
+
+    @GetMapping("/quizzes/completed")
+    public Page<QuizCompleted> getCompletedQuizzes(@RequestParam int page, @AuthenticationPrincipal User user) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return quizCompletedRepository.findCompletedQuizzesPaginated(user.getId(), pageable);
     }
 
     @GetMapping(path = "/quizzes/{id}")
@@ -65,23 +76,11 @@ public class QuizController {
                 : new ResponseEntity<>(quiz, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/quizzes")
-    public ResponseEntity<List<Quiz>> getQuizzes() {
-        return new ResponseEntity<>(new ArrayList<>(quizRepository.findAll()), HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/quizzes/{id}/solve")
-    public ResponseEntity<QuizFeedback> solveQuiz(@PathVariable Long id, @RequestBody Answer answer) {
-        Quiz quiz = quizRepository.findById(id).orElse(null);
-        return quiz == null
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(new QuizFeedback(quiz, answer), HttpStatus.OK);
-    }
-
     @DeleteMapping("/quizzes/{id}")
-    public void deleteQuiz(@PathVariable Long id) {
-        if (quizRepository.existsById(id)) {
-            if (canCurrUserDeleteQuiz(id)) {
+    public void delete(@PathVariable long id, @AuthenticationPrincipal User user) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        if (quiz != null) {
+            if (quiz.getUser().getEmail().equals(user.getEmail())) {
                 quizRepository.deleteById(id);
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             } else {
@@ -92,13 +91,25 @@ public class QuizController {
         }
     }
 
-    private boolean canCurrUserDeleteQuiz(Long quizId) {
-        return quizRepository.findById(quizId).get().getUser().getId()
-                .equals(
-                        userRepository.findByEmail(
-                                ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                                        .getUsername()
-                        ).getId()
-                );
+    @PostMapping(path = "/quizzes/{id}/solve")
+    public ResponseEntity<Feedback> solveQuiz(@PathVariable long id, @RequestBody Answer answer, @AuthenticationPrincipal User user) {
+        Quiz quiz = quizRepository.findById(id).orElse(null);
+        if (quiz == null) {
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Feedback feedback = new Feedback(quiz, answer);
+        if (feedback.isSuccess()) {
+            QuizCompleted quizCompleted = new QuizCompleted();
+            quizCompleted.setCompletedAt(LocalDateTime.now());
+            quizCompleted.setQuiz(quiz);
+            quizCompleted.setUser(user);
+            quizCompleted = quizCompletedRepository.save(quizCompleted);
+
+            quiz.getQuizCompleteds().add(quizCompleted);
+            quizRepository.save(quiz);
+        }
+
+        return new ResponseEntity<>(feedback, HttpStatus.OK);
     }
 }

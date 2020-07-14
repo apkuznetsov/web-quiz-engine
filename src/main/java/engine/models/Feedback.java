@@ -1,14 +1,11 @@
-package engine;
+package engine.models;
 
-import engine.db.quiz.Answer;
-import engine.db.quiz.Quiz;
-
-public class QuizFeedback {
+public class Feedback {
 
     private final boolean isSuccess;
     private final String feedback;
 
-    public QuizFeedback(Quiz quiz, Answer answer) {
+    public Feedback(Quiz quiz, Answer answer) {
         if (quiz.getAnswer().equals(answer.getAnswer())) {
             isSuccess = true;
             feedback = "Congratulations, you're right!";
